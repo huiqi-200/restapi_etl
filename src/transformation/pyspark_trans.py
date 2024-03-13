@@ -9,21 +9,16 @@ from requests_weather import get_weather_forecast
 spark = SparkSession.builder.getOrCreate()
 
 # Read CSV file into DataFrame
-json_weather = get_weather_forecast()
 
-def get_four_day_forecast_dataframe(json_weather = json_weather):
-    """Transforms the 
+def get_four_day_forecast_dataframe(json_weather):
+    """Transforms the json to a DataFrame with [ date|forecast|high|low]
     Args:
-        json_weather: Dictionary of json out
+        json_weather: Dictionary of json output from get_weather_forecast()
 
-     
-    
     Returns:
-    ------------------------
-    
-    
+        pivot_df: pyspark.DataFrame
     """
-    dataframe = spark.createDataFrame(json_weather['items'][0]['forecasts']) 
+    dataframe = spark.createDataFrame(json_weather['items'][0]['forecasts'])
     pivot_df = dataframe.select(F.col('date'), F.col('forecast'), F.explode(F.col('temperature')).alias('temperature_low_high', 'temperature')) \
             .groupBy("date", 'forecast').pivot("temperature_low_high").sum('temperature')
 
@@ -31,4 +26,5 @@ def get_four_day_forecast_dataframe(json_weather = json_weather):
 
 
 if __name__ == '__main__':
-    get_four_day_forecast_dataframe()
+    weather_4_day_json = get_weather_forecast()
+    four_day_forecast_df = get_four_day_forecast_dataframe(weather_4_day_json)
