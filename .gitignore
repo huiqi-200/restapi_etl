@@ -1,0 +1,3 @@
+*.ipynb
+*/__pycache__/*
+src/transformation/__pycache__/requests_weather.cpython-310.pyc
