@@ -24,7 +24,9 @@ def get_four_day_forecast_dataframe(json_weather):
 
     return pivot_df
 
-
-if __name__ == '__main__':
+def main():
     weather_4_day_json = get_weather_forecast()
     four_day_forecast_df = get_four_day_forecast_dataframe(weather_4_day_json)
+
+if __name__ == '__main__':
+    main()
